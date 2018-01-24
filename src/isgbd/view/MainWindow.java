@@ -1,7 +1,10 @@
 package isgbd.view;
 
 import isgbd.controller.FlowerController;
+import isgbd.controller.FlowerVersionController;
+import isgbd.controller.TransactionController;
 import isgbd.model.Flower;
+import isgbd.model.Transaction;
 
 import javax.swing.*;
 import java.awt.*;
@@ -16,13 +19,17 @@ public class MainWindow {
     private JFrame frame;
 
     private FlowerController flowerController;
+    private TransactionController transactionController;
+    private FlowerVersionController flowerVersionController;
     private JList<Flower> flowerList;
     private DefaultListModel<Flower> flowers;
 
 
-    public MainWindow(FlowerController flowerController) {
+    public MainWindow(FlowerController flowerController, TransactionController transactionController, FlowerVersionController flowerVersionController) {
         super();
         this.flowerController = flowerController;
+        this.transactionController = transactionController;
+        this.flowerVersionController = flowerVersionController;
         initialize();
     }
 
@@ -45,7 +52,6 @@ public class MainWindow {
     }
 
     private void initializeFlowerList() {
-
 
         DefaultListModel<Flower> flowersModel = new DefaultListModel<>();
         for (Flower flower : flowerController.listFlowers()) {
@@ -87,18 +93,34 @@ public class MainWindow {
         endTransaction.setBounds(200, 190, 200, 23);
         frame.getContentPane().add(endTransaction);
 
-        increaseBuds.addActionListener(new ActionListener() {
+        startTransaction.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Transaction t = new Transaction();
+                t.setIs_active(true);
+                transactionController.insertTransaction(t);
+            }
+        });
 
+        endTransaction.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                transactionController.endTransaction();
+            }
+        });
+
+        increaseBuds.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (!flowerList.isSelectionEmpty()) {
                     Flower selectedProduct = (Flower) flowerList.getSelectedValue();
-                    // todo do update
+                    flowerVersionController.insertFlowerVersion(selectedProduct);
+                    System.out.print(selectedProduct);
                 }
             }
         });
 
 
-    }
+}
 
 }
