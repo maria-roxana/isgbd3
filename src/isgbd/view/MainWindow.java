@@ -21,8 +21,6 @@ public class MainWindow {
     private FlowerController flowerController;
     private TransactionController transactionController;
     private FlowerVersionController flowerVersionController;
-    private JList<Flower> flowerList;
-    private DefaultListModel<Flower> flowers;
 
 
     public MainWindow(FlowerController flowerController, TransactionController transactionController, FlowerVersionController flowerVersionController) {
@@ -44,7 +42,7 @@ public class MainWindow {
         frame = new JFrame();
         frame.getContentPane().setBackground(SystemColor.inactiveCaptionBorder);
         frame.setBackground(SystemColor.inactiveCaptionBorder);
-        frame.setBounds(100, 100, 610, 334);
+        frame.setBounds(100, 100, 700, 334);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.getContentPane().setLayout(null);
 
@@ -53,54 +51,95 @@ public class MainWindow {
 
     private void initializeFlowerList() {
 
-        DefaultListModel<Flower> flowersModel = new DefaultListModel<>();
-        for (Flower flower : flowerController.listFlowers()) {
-            flowersModel.addElement(flower);
-        }
+        Label detailsLabel = new Label("Details: ");
+        detailsLabel.setBounds(20, 70, 50, 23);
+        frame.getContentPane().add(detailsLabel);
 
-        flowerList = new JList<>(flowersModel);
-        flowerList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        flowerList.setVisibleRowCount(10);
-
-
-        JScrollPane scrollPane = new JScrollPane(flowerList);
-        scrollPane.setBounds(10, 55, 162, 201);
-
-        frame.getContentPane().add(scrollPane);
-
-        JLabel lblProducts = new JLabel("Flowers");
-        lblProducts.setFont(new Font("Tahoma", Font.PLAIN, 16));
-        lblProducts.setBounds(10, 11, 111, 33);
-        frame.getContentPane().add(lblProducts);
+        TextField details = new TextField();
+        details.setBounds(75, 70, 150, 23);
+        frame.getContentPane().add(details);
 
         JButton startTransaction = new JButton("START TRANSACTION");
         startTransaction.setFont(new Font("Arial", Font.PLAIN, 14));
-        startTransaction.setBounds(200, 70, 200, 23);
+        startTransaction.setBounds(235, 70, 200, 23);
         frame.getContentPane().add(startTransaction);
 
-          JButton readFlower = new JButton("Read Flower");
+        Label idLabel1 = new Label("Id: ");
+        idLabel1.setBounds(20, 110, 50, 23);
+        frame.getContentPane().add(idLabel1);
+
+        TextField readId = new TextField();
+        readId.setBounds(75, 110, 50, 23);
+        frame.getContentPane().add(readId);
+
+        JButton readFlower = new JButton("Read Flower");
         readFlower.setFont(new Font("Arial", Font.PLAIN, 14));
-        readFlower.setBounds(200, 110, 200, 23);
+        readFlower.setBounds(235, 110, 200, 23);
         frame.getContentPane().add(readFlower);
+
+        TextField readOutput = new TextField();
+        readOutput.setBounds(450, 110, 150, 23);
+        readOutput.setEnabled(false);
+        frame.getContentPane().add(readOutput);
+
+        Label labelId2 = new Label("Id: ");
+        labelId2.setBounds(20, 150, 50, 23);
+        frame.getContentPane().add(labelId2);
+
+        TextField updateId = new TextField();
+        updateId.setBounds(75, 150, 50, 23);
+        frame.getContentPane().add(updateId);
+
+        Label l3 = new Label("Buds: ");
+        l3.setBounds(130, 150, 50, 23);
+        frame.getContentPane().add(l3);
+
+        TextField budsNumber = new TextField();
+        budsNumber.setBounds(180, 150, 50, 23);
+        frame.getContentPane().add(budsNumber);
 
         JButton increaseBuds = new JButton("Increase buds number");
         increaseBuds.setFont(new Font("Arial", Font.PLAIN, 14));
-        increaseBuds.setBounds(200, 150, 200, 23);
+        increaseBuds.setBounds(235, 150, 200, 23);
         frame.getContentPane().add(increaseBuds);
 
         JButton endTransaction = new JButton("End TRANSACTION");
         endTransaction.setFont(new Font("Arial", Font.PLAIN, 14));
-        endTransaction.setBounds(200, 190, 200, 23);
+        endTransaction.setBounds(235, 190, 200, 23);
         frame.getContentPane().add(endTransaction);
 
         startTransaction.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Transaction t = new Transaction();
-                t.setIs_active(true);
-                transactionController.insertTransaction(t);
+                String transactionDetails = details.getText();
+                transactionController.insertTransaction(transactionDetails);
+                details.setText("");
             }
         });
+
+        readFlower.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                long id = Integer.parseInt(readId.getText());
+                Flower flower = flowerController.readFlower(id);
+                readOutput.setText(flower.toString());
+                readId.setText("");
+
+            }
+        });
+
+        increaseBuds.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int id = Integer.parseInt(updateId.getText());
+                long buds = Integer.parseInt(budsNumber.getText());
+                int transactionId = transactionController.getCurrentTransactionId();
+                flowerVersionController.insertFlowerVersion(id, buds, transactionId);
+                updateId.setText("");
+                budsNumber.setText("");
+            }
+        });
+
 
         endTransaction.addActionListener(new ActionListener() {
             @Override
@@ -108,19 +147,5 @@ public class MainWindow {
                 transactionController.endTransaction();
             }
         });
-
-        increaseBuds.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (!flowerList.isSelectionEmpty()) {
-                    Flower selectedProduct = (Flower) flowerList.getSelectedValue();
-                    flowerVersionController.insertFlowerVersion(selectedProduct);
-                    System.out.print(selectedProduct);
-                }
-            }
-        });
-
-
-}
-
+    }
 }

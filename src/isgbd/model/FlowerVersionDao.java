@@ -25,12 +25,13 @@ public class FlowerVersionDao {
         }
     }
 
-    public void insertFlowerVersions(Flower flower){
-        final String stmtText = "INSERT INTO flowerversion(flower_id, buds) values (?,?)";
+    public void insertFlowerVersions(FlowerVersion flowerVersion){
+        final String stmtText = "INSERT INTO flowerversion(transaction_id, flower_id, buds) values (?,?,?)";
         try {
             PreparedStatement pstmt = conn.prepareStatement(stmtText);
-            pstmt.setLong(1, flower.getId());
-            pstmt.setLong(2, flower.getBuds() + 1);
+            pstmt.setLong(1,flowerVersion.getTransactionId());
+            pstmt.setLong(2, flowerVersion.getFlowerId());
+            pstmt.setLong(3, flowerVersion.getBuds());
             pstmt.executeUpdate();
             pstmt.close();
 
@@ -40,4 +41,6 @@ public class FlowerVersionDao {
         }
 
     }
+
+
 }

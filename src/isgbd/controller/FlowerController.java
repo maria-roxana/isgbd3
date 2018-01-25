@@ -17,10 +17,9 @@ public class FlowerController {
         flowerDao=new FlowerDao();
     }
 
-    public List<Flower> listFlowers(){
-        return flowerDao.getFlowers();
+    public Flower readFlower(long id) {
+        return flowerDao.getFlower(id);
     }
-
 
 
 

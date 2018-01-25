@@ -15,7 +15,6 @@ public class TransactionDao {
 
     private Connection conn;
 
-    private Utils utils;
 
     public TransactionDao() {
         MysqlDataSource dataSource = new MysqlDataSource();
@@ -35,16 +34,23 @@ public class TransactionDao {
         final String stmtText = "INSERT INTO transactions (timestamp, details, active) VALUES(?,?,?)";
         int id = 0;
         try {
-            PreparedStatement pstmt = conn.prepareStatement(stmtText);
-            pstmt.setTimestamp(1, utils.getCurrentTimeStamp());
+            PreparedStatement pstmt = conn.prepareStatement(stmtText, Statement.RETURN_GENERATED_KEYS);
+            pstmt.setTimestamp(1, transaction.getTimestamp());
             pstmt.setString(2, transaction.getDetails());
             pstmt.setBoolean(3, transaction.is_active());
-            id = pstmt.executeUpdate();
+            pstmt.executeUpdate();
+            ResultSet rs = pstmt.getGeneratedKeys();
+            rs.next();
+            id = rs.getInt(1);
+
+            pstmt.close();
+            rs.close();
 
         } catch (SQLException e) {
             //System.out.print("Error on updating transactions.");
             e.printStackTrace();
         }
+        System.out.println(id);
         return id;
     }
 
@@ -61,4 +67,5 @@ public class TransactionDao {
             e.printStackTrace();
         }
     }
+
 }

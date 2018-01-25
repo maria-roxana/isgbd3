@@ -2,10 +2,7 @@ package isgbd.model;
 
 import com.mysql.jdbc.jdbc2.optional.MysqlDataSource;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,30 +26,27 @@ public class FlowerDao {
         }
     }
 
-    public List<Flower> getFlowers() {
-        List<Flower> flowers = new ArrayList<>();
-        final String stmtText = "SELECT id, name, buds from flower";
-        final Statement stmt;
+    public Flower getFlower(long id) {
+        final String stmtText = "select name, buds from flower where id =" + id;
+        Flower flower = new Flower();
+
         try {
-            stmt = conn.createStatement();
-            final ResultSet rs = stmt.executeQuery(stmtText);
+            Statement st = conn.createStatement();
+            ResultSet rs = st.executeQuery(stmtText);
 
-            while (rs.next()) {
-                final Long id = rs.getLong(1);
-                final String name = rs.getString(2);
-                final Long buds = rs.getLong(3);
-
-                flowers.add(new Flower(id, name, buds));
+            if(rs.next()) {
+                String name = rs.getString("name");
+                Long buds = rs.getLong("buds");
+                flower = new Flower(id, name, buds);
             }
 
-            rs.close();
-            stmt.close();
-
+            return flower;
         } catch (SQLException e) {
-            System.out.print("Error when select flowers");
+            System.out.print("Error on updating flowers versions.");
+            e.printStackTrace();
         }
+        return flower;
 
-        return flowers;
     }
 
 
