@@ -8,6 +8,10 @@ public class FlowerVersion {
     private Long id;
     private int flowerId;
     private Long buds;
+    private int transactionId;
+
+    public FlowerVersion() {
+    }
 
     public FlowerVersion(Long id, int flowerId, Long buds) {
         this.id = id;
@@ -38,4 +42,13 @@ public class FlowerVersion {
     public void setBuds(Long buds) {
         this.buds = buds;
     }
+
+    public int getTransactionId() {
+        return transactionId;
+    }
+
+    public void setTransactionId(int transactionId) {
+        this.transactionId = transactionId;
+    }
 }
+

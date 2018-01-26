@@ -2,6 +2,7 @@ package isgbd.controller;
 
 import isgbd.model.Flower;
 import isgbd.model.FlowerDao;
+import isgbd.model.Transaction;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +17,10 @@ public class FlowerController {
         flowerDao=new FlowerDao();
     }
 
-    public List<Flower> listFlowers(){
-        return flowerDao.getFlowers();
+    public Flower readFlower(long id) {
+        return flowerDao.getFlower(id);
     }
+
+
+
 }

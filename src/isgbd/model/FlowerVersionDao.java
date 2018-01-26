@@ -3,16 +3,15 @@ package isgbd.model;
 import com.mysql.jdbc.jdbc2.optional.MysqlDataSource;
 
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
- * Created by user on 22.01.2018.
+ * Created by Laura on 1/24/2018
  */
-public class FlowerDao {
+
+public class FlowerVersionDao {
     private Connection conn;
 
-    public FlowerDao() {
+    public FlowerVersionDao() {
         MysqlDataSource dataSource = new MysqlDataSource();
         dataSource.setUser("root");
         dataSource.setPassword("root");
@@ -26,30 +25,22 @@ public class FlowerDao {
         }
     }
 
-    public Flower getFlower(long id) {
-        final String stmtText = "select name, buds from flower where id =" + id;
-        Flower flower = new Flower();
-
+    public void insertFlowerVersions(FlowerVersion flowerVersion){
+        final String stmtText = "INSERT INTO flowerversion(transaction_id, flower_id, buds) values (?,?,?)";
         try {
-            Statement st = conn.createStatement();
-            ResultSet rs = st.executeQuery(stmtText);
+            PreparedStatement pstmt = conn.prepareStatement(stmtText);
+            pstmt.setLong(1,flowerVersion.getTransactionId());
+            pstmt.setLong(2, flowerVersion.getFlowerId());
+            pstmt.setLong(3, flowerVersion.getBuds());
+            pstmt.executeUpdate();
+            pstmt.close();
 
-            if(rs.next()) {
-                String name = rs.getString("name");
-                Long buds = rs.getLong("buds");
-                flower = new Flower(id, name, buds);
-            }
-
-            return flower;
         } catch (SQLException e) {
             System.out.print("Error on updating flowers versions.");
             e.printStackTrace();
         }
-        return flower;
 
     }
-
-
 
 
 }
