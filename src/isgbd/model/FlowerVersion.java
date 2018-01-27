@@ -1,14 +1,14 @@
 package isgbd.model;
 
 /**
- * Created by user on 24.01.2018.
+ * Created by maria-roxana on 24.01.2018.
  */
 public class FlowerVersion {
 
     private Long id;
     private int flowerId;
     private Long buds;
-    private int transactionId;
+    private int blockId;
 
     public FlowerVersion() {
     }
@@ -43,12 +43,13 @@ public class FlowerVersion {
         this.buds = buds;
     }
 
-    public int getTransactionId() {
-        return transactionId;
+    public int getBlockId() {
+        return blockId;
     }
 
-    public void setTransactionId(int transactionId) {
-        this.transactionId = transactionId;
+    public void setBlockId(int blockId) {
+        this.blockId = blockId;
     }
+
 }
 

@@ -2,12 +2,13 @@ package isgbd.model;
 
 import com.mysql.jdbc.jdbc2.optional.MysqlDataSource;
 
-import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 
 /**
- * Created by user on 22.01.2018.
+ * Created by maria-roxana on 22.01.2018.
  */
 public class FlowerDao {
     private Connection conn;

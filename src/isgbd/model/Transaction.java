@@ -3,7 +3,7 @@ package isgbd.model;
 import java.sql.Timestamp;
 
 /**
- * Created by user on 24.01.2018.
+ * Created by maria-roxana on 24.01.2018.
  */
 public class Transaction {
     private int id;
