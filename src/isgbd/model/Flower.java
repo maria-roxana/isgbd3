@@ -1,7 +1,7 @@
 package isgbd.model;
 
 /**
- * Created by user on 22.01.2018.
+ * Created by maria-roxana on 22.01.2018.
  */
 public class Flower {
     Long id;

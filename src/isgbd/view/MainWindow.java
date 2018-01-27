@@ -1,15 +1,18 @@
 package isgbd.view;
 
+import isgbd.controller.BlockController;
 import isgbd.controller.FlowerController;
 import isgbd.controller.FlowerVersionController;
 import isgbd.controller.TransactionController;
 import isgbd.model.Flower;
-import isgbd.model.Transaction;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+
+import static isgbd.util.BlockType.READ;
+import static isgbd.util.BlockType.WRITE;
 
 /**
  * Created by maria-roxana on 22.01.2018.
@@ -21,6 +24,7 @@ public class MainWindow {
     private FlowerController flowerController;
     private TransactionController transactionController;
     private FlowerVersionController flowerVersionController;
+    private BlockController blockController;
 
 
     public MainWindow(FlowerController flowerController, TransactionController transactionController, FlowerVersionController flowerVersionController) {
@@ -28,6 +32,7 @@ public class MainWindow {
         this.flowerController = flowerController;
         this.transactionController = transactionController;
         this.flowerVersionController = flowerVersionController;
+        this.blockController = new BlockController();
         initialize();
     }
 
@@ -120,7 +125,9 @@ public class MainWindow {
         readFlower.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                long id = Integer.parseInt(readId.getText());
+                int id = Integer.parseInt(readId.getText());
+                int transactionId = transactionController.getCurrentTransactionId();
+                blockController.addBlock(id, transactionId, READ);
                 Flower flower = flowerController.readFlower(id);
                 readOutput.setText(flower.toString());
                 readId.setText("");
@@ -134,7 +141,8 @@ public class MainWindow {
                 int id = Integer.parseInt(updateId.getText());
                 long buds = Integer.parseInt(budsNumber.getText());
                 int transactionId = transactionController.getCurrentTransactionId();
-                flowerVersionController.insertFlowerVersion(id, buds, transactionId);
+                int blockId = blockController.addBlock(id, transactionId, WRITE);
+                flowerVersionController.insertFlowerVersion(id, buds, blockId);
                 updateId.setText("");
                 budsNumber.setText("");
             }

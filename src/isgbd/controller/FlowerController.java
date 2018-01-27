@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by user on 22.01.2018.
+ * Created by maria-roxana on 22.01.2018.
  */
 public class FlowerController {
     private FlowerDao flowerDao;
