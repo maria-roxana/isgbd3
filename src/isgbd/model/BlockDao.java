@@ -2,9 +2,7 @@ package isgbd.model;
 
 import com.mysql.jdbc.jdbc2.optional.MysqlDataSource;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
+import java.sql.*;
 
 
 /**
@@ -31,11 +29,15 @@ public class BlockDao {
         int blockId = -1;
         final String stmtText = "INSERT INTO block(flower_id,transaction_id,type) values (?,?,?)";
         try {
-            PreparedStatement pstmt = conn.prepareStatement(stmtText);
+            PreparedStatement pstmt = conn.prepareStatement(stmtText,Statement.RETURN_GENERATED_KEYS);
             pstmt.setLong(1, block.getFlowerId());
             pstmt.setLong(2, block.getTransactionId());
             pstmt.setString(3, block.getType());
-            blockId = pstmt.executeUpdate();
+            pstmt.executeUpdate();
+            ResultSet rs = pstmt.getGeneratedKeys();
+            if (rs.next()) {
+                blockId = rs.getInt(1);
+            }
             pstmt.close();
 
         } catch (SQLException e) {
